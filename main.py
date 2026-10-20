@@ -1,7 +1,11 @@
+from colorama import Fore, init
+
 from models.product import Product
 from models.inventory import Inventory
 from models.suppliers import Supplier
 from data.savedata import load_data, save_data, load_suppliers, save_suppliers
+
+init(autoreset=True)
 
 LOW_STOCK_LIMIT = 5
 
@@ -25,7 +29,7 @@ def save_inventory(inventory):
 def get_text(message):
     text = input(message).strip()
     while text == "":
-        print("This cannot be empty.")
+        print(Fore.RED + "[ERROR] This cannot be empty.")
         text = input(message).strip()
     return text
 
@@ -35,11 +39,11 @@ def get_float(message):
         try:
             number = float(input(message))
             if number < 0:
-                print("Cannot be negative.")
+                print(Fore.RED + "[ERROR] Cannot be negative.")
             else:
                 return number
         except ValueError:
-            print("Please enter a number.")
+            print(Fore.RED + "[ERROR] Please enter a number.")
 
 
 def get_int(message):
@@ -47,11 +51,11 @@ def get_int(message):
         try:
             number = int(input(message))
             if number < 0:
-                print("Cannot be negative.")
+                print(Fore.RED + "[ERROR] Cannot be negative.")
             else:
                 return number
         except ValueError:
-            print("Please enter a whole number.")
+            print(Fore.RED + "[ERROR] Please enter a whole number.")
 
 
 def show_products(products):
@@ -88,7 +92,7 @@ def add_product(inventory):
     new_product = Product.create_product(name, category, price, quantity)
     inventory.add_product(new_product)
     save_inventory(inventory)
-    print("Product added with ID", new_product.product_id)
+    print(Fore.GREEN + "[SUCCESS] Product added with ID " + str(new_product.product_id))
 
 
 def view_products(inventory):
@@ -109,7 +113,7 @@ def update_product(inventory):
     product = inventory.get_product(product_id)
 
     if product is None:
-        print("Product not found.")
+        print(Fore.RED + "[ERROR] Product not found.")
         return
 
     print("Current name:", product.name)
@@ -136,11 +140,11 @@ def update_product(inventory):
         new_quantity = get_int("Enter new quantity: ")
         inventory.update_product(product_id, quantity=new_quantity)
     else:
-        print("Invalid choice.")
+        print(Fore.RED + "[ERROR] Invalid choice.")
         return
 
     save_inventory(inventory)
-    print("Product updated.")
+    print(Fore.GREEN + "[SUCCESS] Product updated.")
 
 
 def remove_product(inventory):
@@ -149,14 +153,14 @@ def remove_product(inventory):
     product = inventory.get_product(product_id)
 
     if product is None:
-        print("Product not found.")
+        print(Fore.RED + "[ERROR] Product not found.")
         return
 
     sure = input("Remove " + product.name + "? (y/n): ").lower()
     if sure == "y":
         inventory.remove_product(product_id)
         save_inventory(inventory)
-        print("Product removed.")
+        print(Fore.GREEN + "[SUCCESS] Product removed.")
     else:
         print("Cancelled.")
 
@@ -175,13 +179,13 @@ def restock_product(inventory):
     product = inventory.get_product(product_id)
 
     if product is None:
-        print("Product not found.")
+        print(Fore.RED + "[ERROR] Product not found.")
         return
 
     amount = get_int("How many units were added? ")
     inventory.restock_product(product_id, amount)
     save_inventory(inventory)
-    print(product.name, "now has", product.quantity, "in stock.")
+    print(Fore.GREEN + "[SUCCESS] " + product.name + " now has " + str(product.quantity) + " in stock.")
 
 
 def reduce_stock(inventory):
@@ -190,17 +194,17 @@ def reduce_stock(inventory):
     product = inventory.get_product(product_id)
 
     if product is None:
-        print("Product not found.")
+        print(Fore.RED + "[ERROR] Product not found.")
         return
 
     amount = get_int("How many units were taken out? ")
     if amount > product.quantity:
-        print("Not enough stock. Only", product.quantity, "available.")
+        print(Fore.RED + "[ERROR] Not enough stock. Only " + str(product.quantity) + " available.")
         return
 
     inventory.reduce_stock(product_id, amount)
     save_inventory(inventory)
-    print(product.name, "now has", product.quantity, "in stock.")
+    print(Fore.GREEN + "[SUCCESS] " + product.name + " now has " + str(product.quantity) + " in stock.")
 
 
 def show_total_value(inventory):
@@ -383,7 +387,7 @@ def main():
             print("Goodbye!")
             running = False
         else:
-            print("Invalid choice, please try again.")
+            print(Fore.RED + "[ERROR] Invalid choice, please try again.")
 
 
 main()

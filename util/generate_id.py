@@ -1,4 +1,4 @@
-def generate_id(cls, initials, dictionary):
+def generate_id(cls,initials,dictionary):
   while True:
       cls._next_id += 1
       generated_id = f"{initials}{cls._next_id}"
