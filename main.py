@@ -2,7 +2,8 @@ from colorama import Fore, init
 
 from models.product import Product
 from models.inventory import Inventory
-from data.savedata import load_data, save_data
+from models.suppliers import Supplier
+from data.savedata import load_data, save_data, load_suppliers, save_suppliers
 
 init(autoreset=True)
 
@@ -211,8 +212,131 @@ def show_total_value(inventory):
     print("Total value of all stock:", inventory.total_stock_value())
 
 
+def load_supplier_data():
+    saved_suppliers = load_suppliers()
+    if saved_suppliers:
+        for item in saved_suppliers:
+            Supplier.from_dict(item)
+
+
+def save_supplier_data():
+    data = []
+    for supplier in Supplier.all_suppliers():
+        data.append(supplier.to_dict())
+    save_suppliers(data)
+
+
+def show_suppliers(suppliers):
+    if len(suppliers) == 0:
+        print("No suppliers to show.")
+        return
+
+    print("")
+    print("ID".ljust(10) + "Name".ljust(22) + "Phone".ljust(16) + "Email")
+    print("-" * 70)
+    for s in suppliers:
+        print(s.supplier_id.ljust(10) + s.name.ljust(22) + s.phone.ljust(16) + s.email)
+
+
+def add_supplier():
+    print("\n--- Add Supplier ---")
+    name = get_text("Enter supplier name: ")
+    phone = input("Enter phone number: ")
+    email = input("Enter email: ")
+
+    new_supplier = Supplier.create_supplier(name, phone, email)
+    save_supplier_data()
+    print(Fore.GREEN + "[SUCCESS] Supplier added with ID " + str(new_supplier.supplier_id))
+
+
+def view_suppliers():
+    print("\n--- All Suppliers ---")
+    show_suppliers(Supplier.all_suppliers())
+
+
+def update_supplier():
+    print("\n--- Update Supplier ---")
+    supplier_id = get_text("Enter ID of supplier to update: ")
+    supplier = Supplier.get_supplier(supplier_id)
+
+    if supplier is None:
+        print(Fore.RED + "[ERROR] Supplier not found.")
+        return
+
+    print("Current name:", supplier.name)
+    print("Current phone:", supplier.phone)
+    print("Current email:", supplier.email)
+    print("What do you want to update?")
+    print("1. Name")
+    print("2. Phone")
+    print("3. Email")
+    choice = input("Enter choice: ")
+
+    if choice == "1":
+        new_name = get_text("Enter new name: ")
+        supplier.update(name=new_name)
+    elif choice == "2":
+        new_phone = input("Enter new phone: ")
+        supplier.update(phone=new_phone)
+    elif choice == "3":
+        new_email = input("Enter new email: ")
+        supplier.update(email=new_email)
+    else:
+        print(Fore.RED + "[ERROR] Invalid choice.")
+        return
+
+    save_supplier_data()
+    print(Fore.GREEN + "[SUCCESS] Supplier updated.")
+
+
+def delete_supplier():
+    print("\n--- Delete Supplier ---")
+    supplier_id = get_text("Enter ID of supplier to delete: ")
+    supplier = Supplier.get_supplier(supplier_id)
+
+    if supplier is None:
+        print(Fore.RED + "[ERROR] Supplier not found.")
+        return
+
+    sure = input("Delete " + supplier.name + "? (y/n): ").lower()
+    if sure == "y":
+        Supplier.delete_supplier(supplier_id)
+        save_supplier_data()
+        print(Fore.GREEN + "[SUCCESS] Supplier deleted.")
+    else:
+        print("Cancelled.")
+
+
+def supplier_menu():
+    back = False
+
+    while not back:
+        print("\n------ SUPPLIERS ------")
+        print("1. Add supplier")
+        print("2. View all suppliers")
+        print("3. Update a supplier")
+        print("4. Delete a supplier")
+        print("0. Back to main menu")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            add_supplier()
+        elif choice == "2":
+            view_suppliers()
+        elif choice == "3":
+            update_supplier()
+        elif choice == "4":
+            delete_supplier()
+        elif choice == "0":
+            back = True
+        else:
+            print(Fore.RED + "[ERROR] Invalid choice, please try again.")
+
+
 def main():
     inventory = load_inventory()
+    load_supplier_data()
     running = True
 
     while running:
@@ -228,6 +352,7 @@ def main():
         print("7. Restock a product")
         print("8. Reduce stock")
         print("9. Total stock value")
+        print("10. Suppliers")
         print("0. Exit")
 
         low_count = len(get_low_stock(inventory))
@@ -254,8 +379,11 @@ def main():
             reduce_stock(inventory)
         elif choice == "9":
             show_total_value(inventory)
+        elif choice == "10":
+            supplier_menu()
         elif choice == "0":
             save_inventory(inventory)
+            save_supplier_data()
             print("Goodbye!")
             running = False
         else:
