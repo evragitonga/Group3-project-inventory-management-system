@@ -1,25 +1,16 @@
-from util.generate_id import generate_id
 class Product:
-    _next_id = 1000
-    _products = {}
-    def __init__(self,product_id, name, category, price, quantity):
-        self.product_id = product_id
+    def __init__(self, name, category, price, quantity):
+        self.product_id = None
         self.name = name
         self.category = category
         self.price = price
         self.quantity = quantity
 
-    @classmethod
-    def _generate_id(cls):
-        return generate_id(cls,"PDT",cls._products)
     
     @classmethod
     def create_product(cls,name,category,price,quantity):
-        product_id = cls._generate_id()
-        product = cls(product_id,name,category,price,quantity)
-        cls._products[product_id] = product
-        return product
-
+        return cls(name,category,price,quantity)
+        
     def __repr__(self):
         return f"""
         Product(
@@ -47,4 +38,5 @@ class Product:
         product.category = data["category"]
         product.price = data["price"]
         product.quantity = data["quantity"]
+        product.product_id = data["product_id"]
         return  product
