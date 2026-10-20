@@ -246,7 +246,7 @@ def add_supplier():
 
     new_supplier = Supplier.create_supplier(name, phone, email)
     save_supplier_data()
-    print("Supplier added with ID", new_supplier.supplier_id)
+    print(Fore.GREEN + "[SUCCESS] Supplier added with ID " + str(new_supplier.supplier_id))
 
 
 def view_suppliers():
@@ -260,7 +260,7 @@ def update_supplier():
     supplier = Supplier.get_supplier(supplier_id)
 
     if supplier is None:
-        print("Supplier not found.")
+        print(Fore.RED + "[ERROR] Supplier not found.")
         return
 
     print("Current name:", supplier.name)
@@ -282,11 +282,11 @@ def update_supplier():
         new_email = input("Enter new email: ")
         supplier.update(email=new_email)
     else:
-        print("Invalid choice.")
+        print(Fore.RED + "[ERROR] Invalid choice.")
         return
 
     save_supplier_data()
-    print("Supplier updated.")
+    print(Fore.GREEN + "[SUCCESS] Supplier updated.")
 
 
 def delete_supplier():
@@ -295,14 +295,14 @@ def delete_supplier():
     supplier = Supplier.get_supplier(supplier_id)
 
     if supplier is None:
-        print("Supplier not found.")
+        print(Fore.RED + "[ERROR] Supplier not found.")
         return
 
     sure = input("Delete " + supplier.name + "? (y/n): ").lower()
     if sure == "y":
         Supplier.delete_supplier(supplier_id)
         save_supplier_data()
-        print("Supplier deleted.")
+        print(Fore.GREEN + "[SUCCESS] Supplier deleted.")
     else:
         print("Cancelled.")
 
@@ -331,7 +331,7 @@ def supplier_menu():
         elif choice == "0":
             back = True
         else:
-            print("Invalid choice, please try again.")
+            print(Fore.RED + "[ERROR] Invalid choice, please try again.")
 
 
 def main():
