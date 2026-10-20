@@ -1,9 +1,8 @@
 from models.product import Product
-from util.generate_id import generate_id
 class Inventory:
+    
     def __init__(self):
         self._inventory = {}
-
 
     def add_product(self, product):
         if product.product_id is None:
@@ -16,9 +15,14 @@ class Inventory:
         self._inventory[product.product_id] = product
         return product
 
-
     def _generate_id(self):
-        return generate_id("PDT",self._inventory)
+        next_id = 1000
+        while True:
+            next_id += 1
+            generated_id = f"PDT{next_id}"
+
+            if generated_id not in self._inventory:
+                return generated_id
 
     def update_product(
         self, product_id, name=None, price=None, quantity=None, category=None
