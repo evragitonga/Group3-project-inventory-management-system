@@ -4,7 +4,6 @@ from pathlib import Path
 
 DATA_FILE = Path(__file__).with_name("inventory.json")
 
-
 def load_data():
     """Load product data from the JSON file."""
     if not DATA_FILE.exists():
@@ -15,7 +14,6 @@ def load_data():
             return json.load(file)
     except json.JSONDecodeError:
         return []
-
 
 def save_data(data):
     """Save product data to the JSON file."""

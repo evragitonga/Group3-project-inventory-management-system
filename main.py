@@ -70,11 +70,14 @@ def show_products(products):
 
 
 def get_low_stock(inventory):
-    low_stock = []
-    for p in inventory.all_products():
-        if p.quantity < LOW_STOCK_LIMIT:
-            low_stock.append(p)
+    low_stock = inventory.low_stock_products(LOW_STOCK_LIMIT)
+    show_products(low_stock)
     return low_stock
+    # low_stock = []
+    # for p in inventory.all_products():
+    #     if p.quantity < LOW_STOCK_LIMIT:
+    #         low_stock.append(p)
+    # return low_stock
 
 
 def add_product(inventory):
@@ -258,4 +261,5 @@ def main():
             print("Invalid choice, please try again.")
 
 
-main()
+if __name__ == "__main__":
+    main()
