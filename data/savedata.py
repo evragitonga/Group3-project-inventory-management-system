@@ -1,9 +1,23 @@
+
 import json
+from pathlib import Path
+
+DATA_FILE = Path(__file__).with_name("inventory.json")
 
 
 def load_data():
-    pass
+    """Load product data from the JSON file."""
+    if not DATA_FILE.exists():
+        return []
+
+    try:
+        with DATA_FILE.open("r", encoding="utf-8") as file:
+            return json.load(file)
+    except json.JSONDecodeError:
+        return []
 
 
 def save_data(data):
-    pass
+    """Save product data to the JSON file."""
+    with DATA_FILE.open("w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
