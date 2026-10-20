@@ -1,0 +1,64 @@
+# Inventory Management System
+
+A simple command-line inventory management system written in Python. It lets you manage products and keep track of stock levels. Success messages are shown in green and error messages in red.
+
+## Features
+
+- Add, view, search, update and remove products
+- Check stock levels and see which products are low on stock (fewer than 5 units)
+- Restock a product or reduce its stock
+- See the total value of all stock
+- Data is saved automatically, so your products are still there next time you run the program
+- Colored output using [colorama](https://pypi.org/project/colorama/)
+
+## Requirements
+
+- Python 3
+- colorama
+
+## Installation
+
+1. Clone the repository:
+
+       git clone https://github.com/evragitonga/Group3-project-inventory-management-system.git
+       cd Group3-project-inventory-management-system
+
+2. Install the required package:
+
+       pip install colorama
+
+## How to Run
+
+    python main.py
+
+You will see a menu. Type the number of the option you want and press Enter:
+
+    1. Add product
+    2. View all products
+    3. Search for a product
+    4. Update a product
+    5. Remove a product
+    6. Check stock levels
+    7. Restock a product
+    8. Reduce stock
+    9. Total stock value
+    0. Exit
+
+Choose 0 to save and exit.
+
+## Project Structure
+
+    main.py        # Menu and program entry point
+    models/        # Product and Inventory classes
+    data/          # Saving and loading data
+    util/          # Helper code
+
+## Colored Output
+
+- Green `[SUCCESS]` messages show that an action worked, for example `[SUCCESS] Product added with ID P1`
+- Red `[ERROR]` messages show that something went wrong, for example `[ERROR] Product not found.`
+
+## Team
+
+Group 3 project.
+
